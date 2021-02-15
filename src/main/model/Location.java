@@ -49,7 +49,7 @@ public class Location {
     // REQUIRES: Clothing Type must be in Clothing Categories
     // EFFECTS: returns the ClothingType in clothingCategories with given label
     public ClothingType getClothingType(String name) {
-        ClothingType wantedClothingType = null;
+        ClothingType wantedClothingType = new ClothingType("");
         for (ClothingType category : clothingCategories) {
             if (category.getTypeName().equals(name)) {
                 wantedClothingType = category;
@@ -61,6 +61,11 @@ public class Location {
     // EFFECTS: returns the name of the location
     public String getName() {
         return this.name;
+    }
+
+    // EFFETCS: sets the name of the location
+    public void setName(String name) {
+        this.name = name;
     }
 
     // EFFECTS: returns the list of clothing types in location

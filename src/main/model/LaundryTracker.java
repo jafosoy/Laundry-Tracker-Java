@@ -3,6 +3,9 @@ package model;
 import model.clothes.Clothing;
 import model.clothes.ClothingType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LaundryTracker {
     private String laundryTrackerName;
     private Location myCloset;
@@ -44,6 +47,7 @@ public class LaundryTracker {
     }
 
 
+    // REQUIRES: clothing type is in clothing categories
     // MODIFIES: Clothing Type
     // EFFECTS: transfers clothing from clothing type of a location to the same clothing type at the appropriate
     //          location: my closet –> laundry basket –> laundry room –> my closet
@@ -65,6 +69,7 @@ public class LaundryTracker {
     }
 
 
+    // REQUIRES: Clothing categories contain clothing with given colour
     // MODIFIES: Clothing Type
     // EFFECTS: transfers clothing from clothing types of a location to the same clothing type at the appropriate
     //          location, given colour: my closet –> laundry basket –> laundry room –> my closet
@@ -94,6 +99,7 @@ public class LaundryTracker {
         }
     }
 
+    // REQUIRES: clothing categories contain clothing with given material
     // MODIFIES: Clothing Type
     // EFFECTS: transfers clothing from clothing types of a location to the same clothing type at the appropriate
     //          location, given material: my closet –> laundry basket –> laundry room –> my closet
@@ -167,10 +173,25 @@ public class LaundryTracker {
         }
     }
 
+    // EFFECTS: returns the list of all clothing types in the laundry tracker
+    //          - note that all three locations have the same size and types of clothing
+    public List<String> getAllClothingTypes() {
+        List<String> allTypes = new ArrayList<>();
+        for (ClothingType categories: this.myCloset.getClothingCategories()) {
+            allTypes.add(categories.getTypeName());
+        }
+        return allTypes;
+    }
+
 
     // EFFECTS: returns the name of the Laundry Tracker
     public String getLaundryTrackerName() {
         return laundryTrackerName;
+    }
+
+    // EFFECTS: sets the name of the Laundry Tracker
+    public void setLaundryTrackerName(String name) {
+        this.laundryTrackerName = name;
     }
 
     // EFFECTS: returns the Laundry Tracker's closet

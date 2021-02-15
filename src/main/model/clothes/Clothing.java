@@ -87,4 +87,5 @@ public class Clothing {
     public String getMaterial() {
         return material;
     }
+
 }
