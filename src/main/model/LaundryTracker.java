@@ -53,14 +53,13 @@ public class LaundryTracker {
     //          location: my closet –> laundry basket –> laundry room –> my closet
     public void transferClothingType(String clothingType, Location initialLocation) {
         Location targetLocation;
-        if (initialLocation == myCloset) {
-            targetLocation = laundryBasket;
-        } else if (initialLocation == laundryBasket) {
+        if (initialLocation == laundryBasket) {
             targetLocation = laundryRoom;
         } else {
             targetLocation = myCloset;
         }
         for (Clothing myClothing : initialLocation.getClothingType(clothingType).getMyClothes()) {
+
             targetLocation.getClothingType(clothingType).addClothing(myClothing);
         }
         for (int i = initialLocation.getClothingType(clothingType).getMyClothes().size() - 1; i >= 0; i--) {
@@ -75,25 +74,25 @@ public class LaundryTracker {
     //          location, given colour: my closet –> laundry basket –> laundry room –> my closet
     public void transferClothingColour(String colour, Location initial) {
         Location targetLocation;
-        if (initial == myCloset) {
-            targetLocation = laundryBasket;
-        } else if (initial == laundryBasket) {
+        if (initial == laundryBasket) {
             targetLocation = laundryRoom;
         } else {
             targetLocation = myCloset;
         }
         for (ClothingType categories : initial.getClothingCategories()) {
             for (Clothing myClothing : categories.getMyClothes()) {
-                if (myClothing.getColour().equals(colour)) {
+                if (myClothing.getColour() == colour) {
+                    if (initial == laundryRoom) {
+                        myClothing.resetDays();
+                    }
                     targetLocation.getClothingType(categories.getTypeName()).addClothing(myClothing);
                 }
             }
         }
         for (ClothingType categories : initial.getClothingCategories()) {
             for (int i = categories.getMyClothes().size() - 1; i >= 0; i--) {
-                Clothing currClothing = categories.getMyClothes().get(i);
-                if (currClothing.getColour().equals(colour)) {
-                    categories.removeClothing(currClothing.getId());
+                if (categories.getMyClothes().get(i).getColour() == colour) {
+                    categories.removeClothing(categories.getMyClothes().get(i).getId());
                 }
             }
         }
@@ -105,9 +104,7 @@ public class LaundryTracker {
     //          location, given material: my closet –> laundry basket –> laundry room –> my closet
     public void transferClothingMaterial(String material, Location initial) {
         Location targetLocation;
-        if (initial == myCloset) {
-            targetLocation = laundryBasket;
-        } else if (initial == laundryBasket) {
+        if (initial == laundryBasket) {
             targetLocation = laundryRoom;
         } else {
             targetLocation = myCloset;
@@ -115,15 +112,17 @@ public class LaundryTracker {
         for (ClothingType categories : initial.getClothingCategories()) {
             for (Clothing myClothing : categories.getMyClothes()) {
                 if (myClothing.getMaterial().equals(material)) {
+                    if (initial == laundryRoom) {
+                        myClothing.resetDays();
+                    }
                     targetLocation.getClothingType(categories.getTypeName()).addClothing(myClothing);
                 }
             }
         }
         for (ClothingType categories : initial.getClothingCategories()) {
             for (int i = categories.getMyClothes().size() - 1; i >= 0; i--) {
-                Clothing currClothing = categories.getMyClothes().get(i);
-                if (currClothing.getMaterial().equals(material)) {
-                    categories.removeClothing(currClothing.getId());
+                if (categories.getMyClothes().get(i).getMaterial().equals(material)) {
+                    categories.removeClothing(categories.getMyClothes().get(i).getId());
                 }
             }
         }
@@ -177,7 +176,7 @@ public class LaundryTracker {
     //          - note that all three locations have the same size and types of clothing
     public List<String> getAllClothingTypes() {
         List<String> allTypes = new ArrayList<>();
-        for (ClothingType categories: this.myCloset.getClothingCategories()) {
+        for (ClothingType categories : this.myCloset.getClothingCategories()) {
             allTypes.add(categories.getTypeName());
         }
         return allTypes;

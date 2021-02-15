@@ -443,7 +443,7 @@ public class LaundryTrackerApp {
         System.out.println("\n Successfully transferred the items!");
     }
 
-    // EFFECTS: prints out all clothing in all 3 locations based on colour + brand + type
+    // EFFECTS: prints out all clothing in all 3 locations based on colour + brand + types
     private void displayAllClothing() {
         System.out.println("All items:");
         displayClosetClothes();

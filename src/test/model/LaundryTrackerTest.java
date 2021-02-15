@@ -86,29 +86,81 @@ public class LaundryTrackerTest {
     }
 
     @Test
-    public void testTransferClosetToBasketByColour() {
+    public void testTransferBasketToLaundryByClothingType() {
         testLaundryTracker.addClothingType("shirts");
         testLaundryTracker.addClothingType("pants");
         for(int i = 0; i < 5; i++) {
-            testLaundryTracker.getMyCloset().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+            testLaundryTracker.getLaundryBasket().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+                    "S", "colours",4, 6, "cotton"));
+            testLaundryTracker.getLaundryBasket().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+                    "S", "lights",4, 6, "polyester"));
+            testLaundryTracker.getLaundryBasket().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
                     "S", "darks",4, 6, "cotton"));
-            testLaundryTracker.getMyCloset().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+            testLaundryTracker.getLaundryBasket().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "denim"));
+        }
+        testLaundryTracker.transferClothingType("shirts", testLaundryTracker.getLaundryBasket());
+        assertEquals(0,
+                testLaundryTracker.getLaundryBasket().getClothingType("shirts").getMyClothes().size());
+        assertEquals(10,
+                testLaundryTracker.getLaundryBasket().getClothingType("pants").getMyClothes().size());
+        assertEquals(10,
+                testLaundryTracker.getLaundryRoom().getClothingType("shirts").getMyClothes().size());
+        assertEquals(0,
+                testLaundryTracker.getLaundryRoom().getClothingType("pants").getMyClothes().size());
+    }
+
+    @Test
+    public void testTransferBasketToLaundryByColour() {
+        testLaundryTracker.addClothingType("shirts");
+        testLaundryTracker.addClothingType("pants");
+        for(int i = 0; i < 5; i++) {
+            testLaundryTracker.getLaundryBasket().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "cotton"));
+            testLaundryTracker.getLaundryBasket().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
                     "S", "lights",4, 6, "cotton"));
-            testLaundryTracker.getMyCloset().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
+            testLaundryTracker.getLaundryBasket().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
                     "S", "darks",4, 6, "cotton"));
-            testLaundryTracker.getMyCloset().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
+            testLaundryTracker.getLaundryBasket().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
                     "S", "lights",4, 6, "cotton"));
         }
-        testLaundryTracker.transferClothingColour("darks", testLaundryTracker.getMyCloset());
-        assertEquals(5,
-                testLaundryTracker.getMyCloset().getClothingType("shirts").getMyClothes().size());
-        assertEquals(5,
-                testLaundryTracker.getMyCloset().getClothingType("pants").getMyClothes().size());
+        testLaundryTracker.transferClothingColour("darks", testLaundryTracker.getLaundryBasket());
         assertEquals(5,
                 testLaundryTracker.getLaundryBasket().getClothingType("shirts").getMyClothes().size());
         assertEquals(5,
                 testLaundryTracker.getLaundryBasket().getClothingType("pants").getMyClothes().size());
+        assertEquals(5,
+                testLaundryTracker.getLaundryRoom().getClothingType("shirts").getMyClothes().size());
+        assertEquals(5,
+                testLaundryTracker.getLaundryRoom().getClothingType("pants").getMyClothes().size());
     }
+
+    @Test
+    public void testTransferLaundryToClosetByColour() {
+        testLaundryTracker.addClothingType("shirts");
+        testLaundryTracker.addClothingType("pants");
+        for(int i = 0; i < 5; i++) {
+            testLaundryTracker.getLaundryRoom().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "cotton"));
+            testLaundryTracker.getLaundryRoom().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+                    "S", "lights",4, 6, "cotton"));
+            testLaundryTracker.getLaundryRoom().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "cotton"));
+            testLaundryTracker.getLaundryRoom().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
+                    "S", "lights",4, 6, "cotton"));
+        }
+        testLaundryTracker.transferClothingColour("darks", testLaundryTracker.getLaundryRoom());
+        assertEquals(5,
+                testLaundryTracker.getLaundryRoom().getClothingType("shirts").getMyClothes().size());
+        assertEquals(5,
+                testLaundryTracker.getLaundryRoom().getClothingType("pants").getMyClothes().size());
+        assertEquals(5,
+                testLaundryTracker.getMyCloset().getClothingType("shirts").getMyClothes().size());
+        assertEquals(5,
+                testLaundryTracker.getMyCloset().getClothingType("pants").getMyClothes().size());
+    }
+
+
 
     @Test
     public void testTransferBasketToLaundryByMaterial() {
@@ -133,6 +185,31 @@ public class LaundryTrackerTest {
                 testLaundryTracker.getLaundryRoom().getClothingType("shirts").getMyClothes().size());
         assertEquals(5,
                 testLaundryTracker.getLaundryRoom().getClothingType("pants").getMyClothes().size());
+    }
+
+    @Test
+    public void testTransferLaundryToClosetByMaterial() {
+        testLaundryTracker.addClothingType("shirts");
+        testLaundryTracker.addClothingType("pants");
+        for(int i = 0; i < 5; i++) {
+            testLaundryTracker.getLaundryRoom().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "cotton"));
+            testLaundryTracker.getLaundryRoom().getClothingType("shirts").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "polyester"));
+            testLaundryTracker.getLaundryRoom().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "cotton"));
+            testLaundryTracker.getLaundryRoom().getClothingType("pants").addClothing(new Clothing(String.valueOf(i),
+                    "S", "darks",4, 6, "denim"));
+        }
+        testLaundryTracker.transferClothingMaterial("denim", testLaundryTracker.getLaundryRoom());
+        assertEquals(10,
+                testLaundryTracker.getLaundryRoom().getClothingType("shirts").getMyClothes().size());
+        assertEquals(5,
+                testLaundryTracker.getLaundryRoom().getClothingType("pants").getMyClothes().size());
+        assertEquals(0,
+                testLaundryTracker.getMyCloset().getClothingType("shirts").getMyClothes().size());
+        assertEquals(5,
+                testLaundryTracker.getMyCloset().getClothingType("pants").getMyClothes().size());
     }
 
     @Test
@@ -197,6 +274,19 @@ public class LaundryTrackerTest {
                 testLaundryTracker.getLaundryBasket().getClothingType("shirts").getMyClothes().size());
         assertEquals(10,
                 testLaundryTracker.getLaundryRoom().getClothingType("shirts").getMyClothes().size());
+    }
+
+    @Test
+    public void testGetAllClothingTypesNotThere() {
+        assertEquals(0, testLaundryTracker.getAllClothingTypes().size());
+    }
+
+    @Test
+    public void testGetAllClothingTypesOneThere() {
+        assertEquals(0, testLaundryTracker.getAllClothingTypes().size());
+        testLaundryTracker.addClothingType("jeans");
+        assertEquals(1, testLaundryTracker.getAllClothingTypes().size());
+
     }
 
 }
