@@ -1,4 +1,4 @@
-package model;
+package model.clothingTests;
 
 import model.clothes.Clothing;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +34,22 @@ public class ClothingTest {
         assertEquals(1, clothing.getDays());
         clothing.addDays(7);
         assertEquals(8, clothing.getDays());
+    }
+
+    @Test
+    public void testResetDaysAlreadyZero() {
+        assertEquals(0, clothing.getDays());
+        clothing.resetDays();
+        assertEquals(0, clothing.getDays());
+    }
+
+    @Test
+    public void testResetDaysNonZero() {
+        assertEquals(0, clothing.getDays());
+        clothing.addDays(7);
+        assertEquals(7, clothing.getDays());
+        clothing.resetDays();
+        assertEquals(0, clothing.getDays());
     }
 
     @Test

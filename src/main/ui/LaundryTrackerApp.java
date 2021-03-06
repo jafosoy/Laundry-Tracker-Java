@@ -2,23 +2,31 @@ package ui;
 
 // Using basis of user interface on the Teller Application
 
-import model.LaundryTracker;
-import model.Location;
-import model.clothes.Clothing;
-import model.clothes.ClothingType;
 
-import java.util.List;
-import java.util.Scanner;
+import model.clothes.ClothingCategory;
+import model.clothes.Wardrobe;
+import model.locations.Closet;
+import model.locations.LaundryBasket;
+import model.locations.LaundryLocation;
+import model.clothes.Clothing;
+import model.locations.LaundryRoom;
+
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
 public class LaundryTrackerApp {
-    private LaundryTracker myLaundryTracker;
+    private final LaundryLocation myCloset;
+    private final LaundryLocation myBasket;
+    private final LaundryLocation myLaundry;
+    private String userName = "Aaron";      // sets default user name
     private final Scanner input;
 
     // EFFECTS: runs a Laundry Tracker Application
     public LaundryTrackerApp() {
-        myLaundryTracker = new LaundryTracker("AARON", "Bedroom", "Side Door", "Main");
+        myCloset = new Closet(userName + "'s Closet");
+        myBasket = new LaundryBasket(userName + "'s Laundry Basket");
+        myLaundry = new LaundryRoom(userName + "'s Laundry Room");
         this.input = new Scanner(System.in);
         processMainMenu();
 
@@ -123,24 +131,6 @@ public class LaundryTrackerApp {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: processes editor menu
-    private void runMenuEditor() {
-        boolean keepGoing = true;
-        String command;
-
-        while (keepGoing) {
-            displayAppEditor();
-            command = input.next();
-            command = command.toLowerCase();
-
-            if (command.equals("sw")) {
-                keepGoing = false;
-            } else {
-                processMenuEditor(command);
-            }
-        }
-    }
 
     // MODIFIES: this
     // EFFECTS: processes user command for the main menu
@@ -153,8 +143,10 @@ public class LaundryTrackerApp {
             runMenuLaundry();
         } else if (command.equals("vc")) {
             runClothingMenu();
-        } else if (command.equals("ea")) {
-            runMenuEditor();
+        } else if (command.equals("cn")) {
+            changeUsername();
+        } else if (command.equals("rl")) {
+            resetLaundryTracker();
         } else {
             System.out.println("Selection unavailable or invalid.");
         }
@@ -168,9 +160,13 @@ public class LaundryTrackerApp {
         } else if (command.equals("rc")) {
             removeClothing();
         } else if (command.equals("tc")) {
-            transferDirtyClothes();
+            transferAllItems(myCloset);
         } else if (command.equals("ca")) {
             displayAlerts();
+        } else if (command.equals("ad")) {
+            addDaysToClothing();
+        } else if (command.equals("al")) {
+            adjustLowStock();
         } else {
             System.out.println("Selection unavailable or invalid.");
         }
@@ -180,13 +176,13 @@ public class LaundryTrackerApp {
     // EFFECTS: processes user command for the laundry basket menu
     private void processCommandLaundryBasket(String command) {
         if (command.equals("tra")) {
-            transferAllItems(myLaundryTracker.getLaundryBasket());
+            transferAllItems(myBasket);
         } else if (command.equals("trt")) {
-            transferByType(myLaundryTracker.getLaundryRoom());
+            transferByType(myBasket);
         } else if (command.equals("trc")) {
-            transferByColour(myLaundryTracker.getLaundryRoom());
+            transferByColour(myBasket);
         } else if (command.equals("trm")) {
-            transferByMaterial(myLaundryTracker.getLaundryRoom());
+            transferByMaterial(myBasket);
         } else {
             System.out.println("Selection unavailable or invalid.");
         }
@@ -196,13 +192,13 @@ public class LaundryTrackerApp {
     // EFFECTS: processes user command for the laundry room menu
     private void processCommandLaundry(String command) {
         if (command.equals("tra")) {
-            transferAllItems(myLaundryTracker.getLaundryRoom());
+            transferAllItems(myLaundry);
         } else if (command.equals("trt")) {
-            transferByType(myLaundryTracker.getMyCloset());
+            transferByType(myLaundry);
         } else if (command.equals("trc")) {
-            transferByColour(myLaundryTracker.getMyCloset());
+            transferByColour(myLaundry);
         } else if (command.equals("trm")) {
-            transferByMaterial(myLaundryTracker.getMyCloset());
+            transferByMaterial(myLaundry);
         } else {
             System.out.println("Selection unavailable or invalid.");
         }
@@ -224,46 +220,29 @@ public class LaundryTrackerApp {
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: processes user command for editing the app
-    private void processMenuEditor(String command) {
-        if (command.equals("en")) {
-            editLaundryTrackerName();
-        } else if (command.equals("cn")) {
-            editMyClosetName();
-        } else if (command.equals("clst")) {
-            resetLocation("clst");
-        } else if (command.equals("cb")) {
-            editMyBasketName();
-        } else if (command.equals("lbkt")) {
-            resetLocation("lbkt");
-        } else if (command.equals("cl")) {
-            editMyLaundryName();
-        } else if (command.equals("lndrm")) {
-            resetLocation("lndrm");
-        } else {
-            System.out.println("Selection unavailable or invalid.");
-        }
-    }
-
-
     // EFFECTS: displays the app main menu
     private void displayMainMenu() {
+        System.out.println("\n" + userName + "'s Laundry Tracker App");
         System.out.println("\nSelect From:");
         System.out.println("\tmc  -> check out your closet");
         System.out.println("\tlb  -> is your laundry basket full?");
-        System.out.println("\tlr  -> transfer your clothes back to your closet");
-        System.out.println("\tea  -> edit your Laundry Tracker");
+        System.out.println("\tlr  -> transfer your clothes from your laundry room");
+        System.out.println("\tvc  -> view your clothing");
+        System.out.println("\tcn  -> change your user name");
+        System.out.println("\trl  -> reset your laundry tracker");
         System.out.println("\tyes -> are you ready to leave?");
     }
 
     // EFFECTS: displays the closet menu
     private void displayMenuMyCloset() {
+        System.out.println("\n" + myCloset.getName());
         System.out.println("\nSelect From:");
         System.out.println("\tac -> add clothing to your closet");
         System.out.println("\trc -> remove clothing from your closet");
         System.out.println("\ttc -> transfer your dirty clothes");
         System.out.println("\tca -> find your alerts");
+        System.out.println("\tad -> add days worn to clothing");
+        System.out.println("\tal –> adjust when clothing is low in stock");
         System.out.println("\tsw -> are you ready to leave?");
     }
 
@@ -279,6 +258,7 @@ public class LaundryTrackerApp {
 
     // EFFECTS: displays the laundry basket menu
     private void displayMenuBasket() {
+        System.out.println("\n" + myBasket.getName());
         System.out.println("\nSelect From:");
         System.out.println("\ttra -> transfer all your clothes to the laundry room");
         System.out.println("\ttrt -> transfer all your clothing by type to the laundry room");
@@ -289,6 +269,7 @@ public class LaundryTrackerApp {
 
     // EFFECTS: displays the laundry room menu
     private void displayMenuLaundry() {
+        System.out.println("\n" + myLaundry.getName());
         System.out.println("\nSelect From:");
         System.out.println("\ttra -> transfer all your clothes to the laundry room");
         System.out.println("\ttrt -> transfer all your clothing by type to the laundry room");
@@ -297,150 +278,116 @@ public class LaundryTrackerApp {
         System.out.println("\tsw  -> are you ready to leave?");
     }
 
-
-    // EFFECTS: displays the editor view
-    private void displayAppEditor() {
-        System.out.println("\nSelect From:");
-        System.out.println("\ten    -> switch your username");
-        System.out.println("\tcn    -> change your closet name");
-        System.out.println("\tclst  -> reset your closet");
-        System.out.println("\tcb    -> change your laundry basket name");
-        System.out.println("\tlbkt  -> reset your laundry basket");
-        System.out.println("\tcl    -> change your laundry room name");
-        System.out.println("\tlndrm -> reset your laundry room");
-        System.out.println("\tsw    -> are you ready to leave?");
+    // EFFECTS: displays the categories of clothing
+    private void displayCategoryOptions() {
+        System.out.println("\nSelect from the clothing options:");
+        System.out.println("\tds -> Dress or Skirt");
+        System.out.println("\tfm -> Formalwear (e.g.. Suit");
+        System.out.println("\tjc -> Jacket or Coat (Outerwear)");
+        System.out.println("\tjn -> Jeans");
+        System.out.println("\tpn -> Pants");
+        System.out.println("\tst -> Shirts or Tanks");
+        System.out.println("\tsh -> Shorts");
+        System.out.println("\tsp -> Sportswear");
+        System.out.println("\tso -> Socks");
+        System.out.println("\tsl -> Sleepwear");
+        System.out.println("\tun -> Underwear");
     }
 
+    // EFFECTS: processes user command for assigning the clothing category
+    public String assignClothingCategory() {
+        String category = "";
+        boolean keepGoing = true;
+        String command;
+        List<String> acceptable = Arrays.asList("ds", "fm", "jc", "jn", "pn",
+                "st", "sh", "sp", "so", "sl", "un");
+        while (keepGoing) {
+            displayCategoryOptions();
+            command = input.next();
+            command = command.toLowerCase();
+            if (acceptable.contains(command)) {
+                keepGoing = false;
+                int position = acceptable.indexOf(command);
+                category = myCloset.getMyWardrobe().getCategoryNames().get(position);
+            } else {
+                System.out.println("Selection unavailable or invalid...");
+            }
+        }
+        return category;
+    }
 
     // MODIFIES: this
     // EFFECTS: adds a new piece of clothing categorized by it's type and properties
     private void addClothing() {
-        System.out.println("Describe your type of clothing (e.g. shirts, pants, sweaters, [in pl form]).");
-        List<String> types = showAllClothingTypes();
-        String type = input.next();
+        System.out.println("Describe your piece of clothing:");
+        String category = assignClothingCategory();
+
         System.out.println("What brand is it? Say NONE for no brand.");
-        String brand = input.next();
-        System.out.println("What size? Please answer in XS, S, M, L, XL");
-        String size = input.next();
-
-        System.out.println("What colour? (e.g. lights, darks, bright colour, etc.)");
-        String colour = input.next();
-        System.out.println("Frequency of use?");
+        input.nextLine();
+        String brand = input.nextLine();
+        System.out.println("What size? Please answer in XS, S, M, L, XL, etc.");
+        String size = input.next().toLowerCase();
+        System.out.println("What colour? (e.g. black, white, green, etc.)");
+        String colour = input.next().toLowerCase();
+        System.out.println("Frequency of use:");
         int frequency = parseInt(input.next());
-        System.out.println("Material?");
-        String material = input.next();
+        System.out.println("Material:");
+        String material = input.next().toLowerCase();
         Clothing newAdd = new Clothing(brand, size, colour, frequency, 0, material);
-        if (!types.contains(type)) {
-            myLaundryTracker.addClothingType(type);
-
-        }
-        myLaundryTracker.getMyCloset().getClothingType(type).addClothing(newAdd);
+        myCloset.getMyWardrobe().addClothing(category, newAdd, true);
         System.out.println("\nSuccessfully added item to your closet!");
-        System.out.println("\tTaking you back to closet menu...");
-
+        System.out.println("\nTaking you back to closet menu...");
     }
 
-    // EFFECTS: returns list of clothing types
-    private List<String> showAllClothingTypes() {
-        return myLaundryTracker.getAllClothingTypes();
-    }
 
     // MODIFIES: this
-    // EFFECTS: removes clothing based on user given type, brand, and colour
+    // EFFECTS: removes clothing based on user given type and clothing id
     private void removeClothing() {
-        displayClosetClothes();
-        System.out.println("Describe your piece of clothing.");
-        String type = input.next();
-        System.out.println("What colour?");
-        String colour = input.next();
-        System.out.println("Brand?");
-        String brand = input.next();
-
-        Clothing clothing = null;
-        for (Clothing myClothes : myLaundryTracker.getMyCloset().getClothingType(type).getMyClothes()) {
-            if (myClothes.getColour().equals(colour) && myClothes.getBrand().equals(brand)) {
-                System.out.println("Is this your piece of clothing? Type y or n");
-                System.out.println("\t" + myClothes.getColour() + myClothes.getBrand()
-                        + type + "?");
-                String ans = input.next();
-                if (ans.equals("y")) {
-                    myLaundryTracker.getMyCloset().getClothingType(type).getMyClothes().remove(myClothes);
-
-                }
-            }
+        System.out.println("Describe your piece of clothing:");
+        String category = assignClothingCategory();
+        displayClothingInCategory(category, myCloset);
+        if (myCloset.getMyWardrobe().getClothes(myCloset.getMyWardrobe().getCategory(category)).isEmpty()) {
+            System.out.println("No " + category + " currently in closet");
+            return;
         }
-
-
+        System.out.println("Input id of clothing to be removed:");
+        int id = Integer.parseInt(input.next());
+        myCloset.getMyWardrobe().removeClothing(category, id);
+        System.out.println("\nSuccessfully removed clothing from your closet.");
+        System.out.println("\nTaking you back to Closet Menu...");
     }
 
-    // MODIFIES: this
-    // EFFECTS: transfers all dirty clothing in user closet to laundry basket
-    private void transferDirtyClothes() {
-        myLaundryTracker.transferDirtyClothes();
-        System.out.println("\n All dirty items are transferred! Better get to washing them!");
-    }
-
-    // EFFECTS: displays alerts of types of clothing low in stock in the closet and which items need to be washed
-    private void displayAlerts() {
-        if (this.myLaundryTracker.getMyCloset().getClothingCategories().size() == 0) {
-            System.out.println("No clothing at the moment!");
-        }
-
-        for (ClothingType category : this.myLaundryTracker.getMyCloset().getClothingCategories()) {
-            if (category.getMyClothes().size() <= category.getLowStock()) {
-                System.out.println("\nLOW ON" + category.getTypeName() + ". PLEASE WASH YOUR CLOTHES!!!");
-                System.out.println("\n The following need to be washed:");
-                for (Clothing myClothes : category.getMyClothes()) {
-                    if (myClothes.isDirty()) {
-                        System.out.println("\n" + myClothes.getColour() + " " + myClothes.getBrand() + " "
-                                + category.getTypeName());
-                    }
-
-                }
-            } else {
-                System.out.println("\nEverything is clean! Carry on!");
+    // MODIFIES: this and clothing
+    // EFFECTS: updates the days worn of clothing by user
+    private void addDaysToClothing() {
+        boolean keepGoing = true;
+        while (keepGoing) {
+            System.out.println("Describe your piece of clothing:");
+            String category = assignClothingCategory();
+            displayClothingInCategory(category, myCloset);
+            System.out.println("Input id of clothing to be updated");
+            int id = Integer.parseInt(input.next());
+            System.out.println("How many days worn do you want to add to clothing?");
+            int days = Integer.parseInt(input.next());
+            myCloset.getMyWardrobe().getMyClothing(category, id).addDays(days);
+            System.out.println("Successfully updated clothing. \nDo you want to keep going? type n if not");
+            String ans = input.next().toLowerCase();
+            if (ans.equals("n")) {
+                keepGoing = false;
             }
         }
     }
 
-    // MODIFIES: this
-    // EFFECTS: transfers all clothing from a  given location to their appropriate location
-    //          - only works for laundry basket –> laundry room -> user closet
-    private void transferAllItems(Location location) {
-        if (location == this.myLaundryTracker.getLaundryBasket()) {
-            myLaundryTracker.transferAllClothes(myLaundryTracker.getLaundryBasket());
-            System.out.println("\nYour laundry basket is empty!");
-        } else {
-            myLaundryTracker.transferAllClothes(myLaundryTracker.getLaundryRoom());
-            System.out.println("\n Your laundry room is empty!");
+    // REQUIRES: input category name must correspond to a category in wardrobe
+    // EFFECTS: displays all of the clothing currently in the location's wardrobe of the given category
+    private void displayClothingInCategory(String category, LaundryLocation location) {
+        ClothingCategory targetCategory = location.getMyWardrobe().getCategory(category);
+        List<Clothing> clothesOfCategory = location.getMyWardrobe().getClothes(targetCategory);
+        for (Clothing cc: clothesOfCategory) {
+            System.out.println("\nID " + cc.getID() + ": " + cc.getColour() + " " + cc.getBrand() + " " + category);
+            System.out.println("\tDays worn: " + cc.getDays());
         }
-    }
-
-    // MODIFIES: this
-    // EFFECTS: transfers all clothing from given location based on given clothing type input
-    private void transferByType(Location location) {
-        System.out.println("What do you want to transfer?");
-        String type = input.next();
-        this.myLaundryTracker.transferClothingType(type, location);
-        System.out.println("\n Successfully transferred the items!");
-    }
-
-    // MODIFIES: this
-    // EFFECTS: transfers clothing from clothing types in given location based on given colour input
-    private void transferByColour(Location location) {
-        System.out.println("What colour do you want to transfer?");
-        String colour = input.next();
-        this.myLaundryTracker.transferClothingColour(colour, location);
-        System.out.println("\n Successfully transferred the items!");
-    }
-
-    // MODIFIES: this
-    // EFFECTS: transfers clothing from clothing types in given location based on input material
-    private void transferByMaterial(Location location) {
-        System.out.println("What material do you want to transfer?");
-        String material = input.next();
-        this.myLaundryTracker.transferClothingColour(material, location);
-        System.out.println("\n Successfully transferred the items!");
+        System.out.println("\n");
     }
 
     // EFFECTS: prints out all clothing in all 3 locations based on colour + brand + types
@@ -454,73 +401,168 @@ public class LaundryTrackerApp {
     // EFFECTS: prints out clothing in laundry room based on colour + brand + type
     private void displayLaundryRoomClothes() {
         System.out.println("Clothing at your laundry room: ");
-        for (ClothingType categories : myLaundryTracker.getLaundryRoom().getClothingCategories()) {
-            for (Clothing myClothes : categories.getMyClothes()) {
-                System.out.println("\t" + myClothes.getColour() + myClothes.getBrand() + categories.getTypeName());
-            }
+        Wardrobe laundryWardrobe = myLaundry.getMyWardrobe();
+        for (String categoryName: laundryWardrobe.getCategoryNames()) {
+            displayClothingInCategory(categoryName, myLaundry);
         }
     }
 
     // EFFECTS: prints out clothing in laundry basket based on colour + brand + type
     private void displayLaundryBasketClothes() {
-        System.out.println("Clothing in your laundry basket: ");
-        for (ClothingType categories : myLaundryTracker.getLaundryBasket().getClothingCategories()) {
-            for (Clothing myClothes : categories.getMyClothes()) {
-                System.out.println("\t" + myClothes.getColour() + myClothes.getBrand() + categories.getTypeName());
-            }
+        System.out.println("Clothing at your laundry basket: ");
+        Wardrobe laundryWardrobe = myBasket.getMyWardrobe();
+        for (String categoryName: laundryWardrobe.getCategoryNames()) {
+            displayClothingInCategory(categoryName, myBasket);
         }
     }
 
     // EFFECTS: prints out clothing in closet based on colour + brand + type
     private void displayClosetClothes() {
         System.out.println("Clothing in your closet: ");
-        for (ClothingType categories : myLaundryTracker.getMyCloset().getClothingCategories()) {
-            for (Clothing myClothes : categories.getMyClothes()) {
-                System.out.println("\t" + myClothes.getColour() + myClothes.getBrand() + categories.getTypeName());
+        Wardrobe laundryWardrobe = myCloset.getMyWardrobe();
+        for (String categoryName: laundryWardrobe.getCategoryNames()) {
+            displayClothingInCategory(categoryName, myCloset);
+        }
+    }
+
+
+    // EFFECTS: displays alerts of types of clothing low in stock in the closet and which items need to be washed
+    private void displayAlerts() {
+        Wardrobe closetWardrobe = myCloset.getMyWardrobe();
+        for (String cc: closetWardrobe.getCategoryNames()) {
+            ClothingCategory currCategory = closetWardrobe.getCategory(cc);
+            if (closetWardrobe.isLow(currCategory)) {
+                System.out.println("\nLOW ON" + cc + ". PLEASE WASH YOUR CLOTHES!!!");
+            }
+            System.out.println("\n The following need to be washed:");
+            for (Clothing myClothes: closetWardrobe.getClothes(currCategory)) {
+                if (myClothes.isDirty()) {
+                    System.out.println("\tID " + myClothes.getID() + ": " + myClothes.getColour()
+                            + " " + myClothes.getBrand() + " " + currCategory);
+                }
+
+            }
+        }
+    }
+
+    // MODIFIES: this and wardrobe
+    // EFFECTS: changes low stock of given category input (i.e. when a piece of clothing is low in stock)
+    private void adjustLowStock() {
+        System.out.println("What do you want to change?");
+        boolean keepGoing = true;
+        while (keepGoing) {
+            String categoryToChange = assignClothingCategory();
+            System.out.println("Input amount of " + categoryToChange + " for when it is low in stock:");
+            int lowStock = Integer.parseInt(input.next());
+            myCloset.getMyWardrobe().setCategoryLowStock(categoryToChange, lowStock);
+            System.out.println("Do you want to keep changing? y or n?");
+            String ans = input.next();
+            if (ans.equals("n")) {
+                keepGoing = false;
             }
         }
     }
 
     // MODIFIES: this
-    // EFFECTS: resets the name and empties the given location
-    private void resetLocation(String location) {
-        System.out.println("Enter a name:");
-        String name = input.next();
-        myLaundryTracker.resetLocation(location, name);
-        System.out.println("\nlocations reset!");
-
+    // EFFECTS: transfers all clothing from a  given location to their appropriate location
+    //          - only works for laundry basket –> laundry room -> user closet
+    private void transferAllItems(LaundryLocation laundryLocation) {
+        if (laundryLocation == this.myCloset) {
+            laundryLocation.transferAllClothes(myBasket);
+            System.out.println("\nSuccessfully transferred all dirty clothing!");
+        } else if (laundryLocation == this.myBasket) {
+            laundryLocation.transferAllClothes(myLaundry);
+            System.out.println("\nYour laundry basket is empty!");
+        } else {
+            laundryLocation.transferAllClothes(myCloset);
+            System.out.println("\n Your laundry room is empty!");
+        }
     }
 
     // MODIFIES: this
-    // EFFECTS: changes name of Laundry Tracker to **name's Laundry Tracker
-    private void editLaundryTrackerName() {
-        System.out.println("Enter a new name");
-        String name = input.next();
-        myLaundryTracker.setLaundryTrackerName(name);
+    // EFFECTS: transfers all clothing from given location based on given clothing type input
+    private void transferByType(LaundryLocation laundryLocation) {
+        System.out.println("What do you want to transfer?");
+        String category = assignClothingCategory();
+        if (laundryLocation.equals(myBasket)) {
+            laundryLocation.transferClothingByType(category, myLaundry);
+        } else {
+            laundryLocation.transferClothingByType(category, myCloset);
+        }
+        System.out.println("\n Successfully transferred the items!");
     }
 
     // MODIFIES: this
-    // EFFECTS: updates new name of location for user closet
-    private void editMyClosetName() {
-        System.out.println("Enter new name:");
-        String name = input.next();
-        myLaundryTracker.getMyCloset().setName(name);
+    // EFFECTS: transfers clothing from clothing types in given location based on given colour input
+    private void transferByColour(LaundryLocation laundryLocation) {
+        System.out.println("What colour do you want to transfer?");
+        List<String> allColours = laundryLocation.getMyWardrobe().getAllColoursAdded();
+        for (String colour: allColours) {
+            System.out.println(colour);
+        }
+        boolean keepGoing = true;
+        while (keepGoing) {
+            String colour = input.next();
+            colour = colour.toLowerCase();
+            if (allColours.contains(colour)) {
+                keepGoing = false;
+                if (laundryLocation.equals(myBasket)) {
+                    laundryLocation.transferClothingByColour(myLaundry, colour);
+                } else {
+                    laundryLocation.transferClothingByColour(myCloset, colour);
+                }
+            } else {
+                System.out.println("Selection unavailable or invalid...");
+            }
+        }
+        System.out.println("\n Successfully transferred the items!");
     }
 
     // MODIFIES: this
-    // EFFECTS: updates new name of location for laundry basket
-    private void editMyBasketName() {
-        System.out.println("Enter new name:");
-        String name = input.next();
-        myLaundryTracker.getLaundryBasket().setName(name);
+    // EFFECTS: transfers clothing from clothing types in given location based on input material
+    private void transferByMaterial(LaundryLocation laundryLocation) {
+        System.out.println("What material do you want to transfer?");
+        List<String> allMaterials = myCloset.getMyWardrobe().getAllMaterialsAdded();
+        for (String material: allMaterials) {
+            System.out.println(material);
+        }
+        boolean keepGoing = true;
+        while (keepGoing) {
+            String material = input.next();
+            material = material.toLowerCase();
+            if (allMaterials.contains(material)) {
+                if (laundryLocation.equals(myBasket)) {
+                    laundryLocation.transferClothingByMaterial(myLaundry, material);
+                } else {
+                    laundryLocation.transferClothingByMaterial(myCloset, material);
+                }
+                keepGoing = false;
+            } else {
+                System.out.println("Selection unavailable or invalid...");
+            }
+        }
+        System.out.println("\n Successfully transferred the items!");
     }
 
     // MODIFIES: this
-    // EFFECTS: updates new name of location for laundry basket
-    private void editMyLaundryName() {
-        System.out.println("Enter new name:");
-        String name = input.next();
-        myLaundryTracker.getLaundryRoom().setName(name);
+    // EFFECTS: changes username of laundry tracker app
+    public void changeUsername() {
+        System.out.println("Input username to change to:");
+        this.userName = input.next();
+        System.out.println("Successfully changed username!");
     }
 
+    // MODIFIES: this
+    // EFFECTS: resets the laundry tracker's locations
+    public void resetLaundryTracker() {
+        System.out.println("Are you sure about this? y or n");
+        String ans = input.next();
+        if (ans.equals("y")) {
+            System.out.println("Reset username to:");
+            this.userName = input.next();
+            myCloset.resetWardrobe();
+            myLaundry.resetWardrobe();
+            myBasket.resetWardrobe();
+        }
+    }
 }
