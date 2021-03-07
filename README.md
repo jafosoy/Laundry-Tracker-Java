@@ -30,4 +30,11 @@ the number of times the clothing has been worn, and the frequency I had set earl
 - As a user, I want to be able to transfer (remove/add) clothing from a laundry basket to a laundry room, and set which 
 clothing to wash in the laundry room
 - As a user, I want to be able to view what's in my closet, laundry basket, or laundry room
+
+- As a user, I want to be able to save my location statuses (i.e. clothing currently in wardrobes of closet, laundry, and laundry 
+room) to file
+- As a user, I want to be able to load the username of the laundry tracker app 
+- As a user, I want to be able to load my locations statuses from file
+
+
  
