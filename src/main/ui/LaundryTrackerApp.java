@@ -10,24 +10,46 @@ import model.locations.LaundryBasket;
 import model.locations.LaundryLocation;
 import model.clothes.Clothing;
 import model.locations.LaundryRoom;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
 public class LaundryTrackerApp {
-    private final LaundryLocation myCloset;
-    private final LaundryLocation myBasket;
-    private final LaundryLocation myLaundry;
-    private String userName = "Aaron";      // sets default user name
+    private static final String JSON_STORE_CLOSET = "./data/myCloset.json";
+    private static final String JSON_STORE_BASKET = "./data/myBasket.json";
+    private static final String JSON_STORE_LAUNDRY = "./data/myLaundry.json";
+    private JsonWriter jsonWriterCloset;
+    private JsonReader jsonReaderCloset;
+    private JsonWriter jsonWriterBasket;
+    private JsonReader jsonReaderBasket;
+    private JsonWriter jsonWriterLaundry;
+    private JsonReader jsonReaderLaundry;
+
+    private LaundryLocation myCloset;
+    private LaundryLocation myBasket;
+    private LaundryLocation myLaundry;
+    private String userName = "User";      // sets default user name
     private final Scanner input;
 
     // EFFECTS: runs a Laundry Tracker Application
     public LaundryTrackerApp() {
-        myCloset = new Closet(userName + "'s Closet");
-        myBasket = new LaundryBasket(userName + "'s Laundry Basket");
-        myLaundry = new LaundryRoom(userName + "'s Laundry Room");
+        myCloset = new Closet(userName);
+        myBasket = new LaundryBasket(userName);
+        myLaundry = new LaundryRoom(userName);
         this.input = new Scanner(System.in);
+
+        jsonWriterCloset = new JsonWriter(JSON_STORE_CLOSET);
+        jsonReaderCloset = new JsonReader(JSON_STORE_CLOSET);
+        jsonWriterBasket = new JsonWriter(JSON_STORE_BASKET);
+        jsonReaderBasket = new JsonReader(JSON_STORE_BASKET);
+        jsonWriterLaundry = new JsonWriter(JSON_STORE_LAUNDRY);
+        jsonReaderLaundry = new JsonReader(JSON_STORE_LAUNDRY);
+
         processMainMenu();
 
     }
@@ -147,6 +169,10 @@ public class LaundryTrackerApp {
             changeUsername();
         } else if (command.equals("rl")) {
             resetLaundryTracker();
+        } else if (command.equals("s")) {
+            saveLocationsToFile();
+        } else if (command.equals("l")) {
+            loadLocationsFromFile();
         } else {
             System.out.println("Selection unavailable or invalid.");
         }
@@ -230,12 +256,14 @@ public class LaundryTrackerApp {
         System.out.println("\tvc  -> view your clothing");
         System.out.println("\tcn  -> change your user name");
         System.out.println("\trl  -> reset your laundry tracker");
+        System.out.println("\ts   -> save laundry tracker to file");
+        System.out.println("\tl   -> load laundry tracker from file");
         System.out.println("\tyes -> are you ready to leave?");
     }
 
     // EFFECTS: displays the closet menu
     private void displayMenuMyCloset() {
-        System.out.println("\n" + myCloset.getName());
+        System.out.println("\n" + myCloset.getUsername());
         System.out.println("\nSelect From:");
         System.out.println("\tac -> add clothing to your closet");
         System.out.println("\trc -> remove clothing from your closet");
@@ -258,7 +286,7 @@ public class LaundryTrackerApp {
 
     // EFFECTS: displays the laundry basket menu
     private void displayMenuBasket() {
-        System.out.println("\n" + myBasket.getName());
+        System.out.println("\n" + myBasket.getUsername());
         System.out.println("\nSelect From:");
         System.out.println("\ttra -> transfer all your clothes to the laundry room");
         System.out.println("\ttrt -> transfer all your clothing by type to the laundry room");
@@ -269,7 +297,7 @@ public class LaundryTrackerApp {
 
     // EFFECTS: displays the laundry room menu
     private void displayMenuLaundry() {
-        System.out.println("\n" + myLaundry.getName());
+        System.out.println("\n" + myLaundry.getUsername());
         System.out.println("\nSelect From:");
         System.out.println("\ttra -> transfer all your clothes to the laundry room");
         System.out.println("\ttrt -> transfer all your clothing by type to the laundry room");
@@ -288,9 +316,9 @@ public class LaundryTrackerApp {
         System.out.println("\tpn -> Pants");
         System.out.println("\tst -> Shirts or Tanks");
         System.out.println("\tsh -> Shorts");
-        System.out.println("\tsp -> Sportswear");
-        System.out.println("\tso -> Socks");
         System.out.println("\tsl -> Sleepwear");
+        System.out.println("\tso -> Socks");
+        System.out.println("\tsp -> Sportswear");
         System.out.println("\tun -> Underwear");
     }
 
@@ -300,7 +328,7 @@ public class LaundryTrackerApp {
         boolean keepGoing = true;
         String command;
         List<String> acceptable = Arrays.asList("ds", "fm", "jc", "jn", "pn",
-                "st", "sh", "sp", "so", "sl", "un");
+                "st", "sh", "sl", "so", "sp", "un");
         while (keepGoing) {
             displayCategoryOptions();
             command = input.next();
@@ -370,7 +398,8 @@ public class LaundryTrackerApp {
             System.out.println("How many days worn do you want to add to clothing?");
             int days = Integer.parseInt(input.next());
             myCloset.getMyWardrobe().getMyClothing(category, id).addDays(days);
-            System.out.println("Successfully updated clothing. \nDo you want to keep going? type n if not");
+            System.out.println("Successfully updated clothing. "
+                    + "\nDo you want to keep going? type n if not, y to keep going");
             String ans = input.next().toLowerCase();
             if (ans.equals("n")) {
                 keepGoing = false;
@@ -384,10 +413,10 @@ public class LaundryTrackerApp {
         ClothingCategory targetCategory = location.getMyWardrobe().getCategory(category);
         List<Clothing> clothesOfCategory = location.getMyWardrobe().getClothes(targetCategory);
         for (Clothing cc: clothesOfCategory) {
-            System.out.println("\nID " + cc.getID() + ": " + cc.getColour() + " " + cc.getBrand() + " " + category);
-            System.out.println("\tDays worn: " + cc.getDays());
+            System.out.println("ID " + cc.getID() + ": " + cc.getColour() + " " + cc.getBrand() + " " + category);
+            System.out.println("Days worn: " + cc.getDays());
         }
-        System.out.println("\n");
+
     }
 
     // EFFECTS: prints out all clothing in all 3 locations based on colour + brand + types
@@ -563,6 +592,92 @@ public class LaundryTrackerApp {
             myCloset.resetWardrobe();
             myLaundry.resetWardrobe();
             myBasket.resetWardrobe();
+        }
+    }
+
+    // EFFECTS: saves laundry locations to file
+    private void saveLocationsToFile() {
+        saveClosetToFile();
+        saveBasketToFile();
+        saveLaundryToFile();
+    }
+
+    // EFFECTS: saves closet to file
+    public void saveClosetToFile() {
+        try {
+            jsonWriterCloset.open();
+            jsonWriterCloset.write(myCloset);
+            jsonWriterCloset.close();
+            System.out.println("Successfully saved " + myCloset.getUsername() + " to " + JSON_STORE_CLOSET);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE_CLOSET);
+        }
+    }
+
+    // EFFECTS: saves basket to file
+    public void saveBasketToFile() {
+        try {
+            jsonWriterBasket.open();
+            jsonWriterBasket.write(myBasket);
+            jsonWriterBasket.close();
+            System.out.println("Successfully saved " + myBasket.getUsername() + " to " + JSON_STORE_BASKET);
+
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE_BASKET);
+        }
+    }
+
+    // EFFECTS: saves laundry to file
+    public void saveLaundryToFile() {
+        try {
+            jsonWriterLaundry.open();
+            jsonWriterLaundry.write(myLaundry);
+            jsonWriterLaundry.close();
+            System.out.println("Successfully saved " + myLaundry.getUsername() + " to " + JSON_STORE_LAUNDRY);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE_LAUNDRY);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads laundry locations and user name from file
+    private void loadLocationsFromFile() {
+        loadClosetFromFile();
+        loadBasketFromFile();
+        loadLaundryFromFile();
+        this.userName = this.myCloset.getUsername().substring(0, 8);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads closet from file
+    public void loadClosetFromFile() {
+        try {
+            myCloset = jsonReaderCloset.readLocation();
+            System.out.println("Successfully loaded " + myCloset.getUsername() + " from " + JSON_STORE_CLOSET);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE_CLOSET);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads basket from file
+    public void loadBasketFromFile() {
+        try {
+            myBasket = jsonReaderBasket.readLocation();
+            System.out.println("Successfully loaded " + myBasket.getUsername() + " from " + JSON_STORE_CLOSET);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE_BASKET);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads laundry from file
+    public void loadLaundryFromFile() {
+        try {
+            myLaundry = jsonReaderLaundry.readLocation();
+            System.out.println("Successfully loaded " + myLaundry.getUsername() + " from " + JSON_STORE_CLOSET);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE_LAUNDRY);
         }
     }
 }

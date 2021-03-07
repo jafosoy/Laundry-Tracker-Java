@@ -1,16 +1,9 @@
-package model.locationsTests;
+package model.locations;
 
 import model.clothes.Clothing;
 import model.clothes.ClothingCategory;
-import model.locations.Closet;
-import model.locations.LaundryBasket;
-import model.locations.LaundryLocation;
-import model.locations.LaundryRoom;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -339,7 +332,7 @@ public class LaundryLocationTest {
 
     @Test
     public void testGetName() {
-        assertEquals("Test Closet", testCloset.getName());
+        assertEquals("Test Closet's Closet", testCloset.getUsername());
     }
 
 

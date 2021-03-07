@@ -1,6 +1,9 @@
 package model.clothes;
 
-public class ClothingCategory {
+import org.json.JSONObject;
+import persistence.Writable;
+
+public class ClothingCategory implements Writable {
     private final String categoryName;
     private int lowStock;
     private int nextID;
@@ -39,5 +42,22 @@ public class ClothingCategory {
     // EFFECTS: updates next ID by adding 1
     public void updateID() {
         this.nextID++;
+    }
+
+    // MODIFIES: this
+    // EFFECTS: sets the ID to the given int
+    public void setNextID(int id) {
+        this.nextID = id;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("name", categoryName);
+        jsonObject.put("low stock", lowStock);
+        jsonObject.put("next ID", nextID);
+
+        return jsonObject;
     }
 }

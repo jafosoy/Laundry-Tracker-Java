@@ -1,4 +1,4 @@
-package model.clothingTests;
+package model.clothing;
 
 import model.clothes.Clothing;
 import model.clothes.ClothingCategory;
@@ -7,8 +7,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,8 +1,12 @@
 package model.clothes;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.*;
 
-public class Wardrobe {
+public class Wardrobe implements Writable {
     private final Map<ClothingCategory, List<Clothing>> allClothes;
     private final int defaultLowStock = 0;
     private final ClothingCategory dressOrSkirt = new ClothingCategory("dress/skirt", defaultLowStock);
@@ -76,7 +80,7 @@ public class Wardrobe {
     }
 
     // REQUIRES: input clothing type must correspond to a category name and list of clothing must contain a clothing
-    //           with given id
+    //           with given id`
     // EFFECTS: returns clothing with given id from the list of clothing corresponding to given type
     public Clothing getMyClothing(String type, int id) {
         ClothingCategory category = getCategory(type);
@@ -147,4 +151,39 @@ public class Wardrobe {
         return category.getLowStock() >= allClothes.get(category).size();
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("clothing sets", clothingSetsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns clothing sets in this wardrobe as a JSON array
+    public JSONArray clothingSetsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (ClothingCategory cc: this.allClothes.keySet()) {
+            jsonArray.put(categoryToJson(cc));
+        }
+        return jsonArray;
+    }
+
+    // EFFECTS: returns a clothing set in this wardrobe as a JSON object
+    private JSONObject categoryToJson(ClothingCategory cc) {
+        JSONObject json = new JSONObject();
+        json.put("category", cc.toJson());
+        json.put("clothes", clothesToJson(cc));
+        return json;
+    }
+
+    // EFFECTS: returns clothes in given clothing set as a JSON array
+    private JSONArray clothesToJson(ClothingCategory cc) {
+        JSONArray jsonArray = new JSONArray();
+
+        for (Clothing c: getClothes(cc)) {
+            jsonArray.put(c.toJson());
+        }
+
+        return jsonArray;
+    }
 }

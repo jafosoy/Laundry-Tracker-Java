@@ -1,4 +1,4 @@
-package model.clothingTests;
+package model.clothing;
 
 import model.clothes.ClothingCategory;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,6 +40,13 @@ public class ClothingCategoryTest {
         assertEquals(1, testCategory.getNextID());
         testCategory.updateID();
         assertEquals(2, testCategory.getNextID());
+    }
+
+    @Test
+    public void testSetID() {
+        assertEquals(1, testCategory.getNextID());
+        testCategory.setNextID(10);
+        assertEquals(10, testCategory.getNextID());
     }
 
 }

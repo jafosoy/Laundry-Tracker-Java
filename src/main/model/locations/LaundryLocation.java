@@ -5,17 +5,19 @@ package model.locations;
 import model.clothes.Clothing;
 import model.clothes.ClothingCategory;
 import model.clothes.Wardrobe;
+import org.json.JSONObject;
+import persistence.Writable;
 
 import java.util.List;
 
 // A location of where a wardrobe of clothing are currently located, and the name of the location
-public abstract class LaundryLocation {
+public abstract class LaundryLocation implements Writable {
     private Wardrobe myWardrobe;
-    private final String name;
+    private final String username;
 
     // EFFECTS: creates a new Location with its name and set of clothing (wardrobe)
     public LaundryLocation(String name) {
-        this.name = name;
+        this.username = name;
         myWardrobe = new Wardrobe();
     }
 
@@ -100,12 +102,22 @@ public abstract class LaundryLocation {
     }
 
     // EFFECTS: returns the name of the location
-    public String getName() {
-        return this.name;
+    public String getUsername() {
+        return this.username;
     }
 
     // EFFECTS: returns the location's wardrobe
     public Wardrobe getMyWardrobe() {
         return this.myWardrobe;
     }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", username);
+        json.put("wardrobe", myWardrobe.toJson());
+        return json;
+    }
+
+
 }

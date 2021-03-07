@@ -8,7 +8,8 @@ import java.util.List;
 
 public class Closet extends LaundryLocation {
     public Closet(String name) {
-        super(name);
+        super(name + "'s Closet");
+
     }
 
     @Override

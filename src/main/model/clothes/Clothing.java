@@ -1,7 +1,10 @@
 package model.clothes;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 // Represents a piece of clothing with it's brand, color and size
-public class Clothing {
+public class Clothing implements Writable {
     private final String brand;
     private final String size;
     private final String colour;
@@ -90,4 +93,18 @@ public class Clothing {
         return material;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+
+        jsonObject.put("brand", brand);
+        jsonObject.put("size", size);
+        jsonObject.put("colour", colour);
+        jsonObject.put("frequency", frequency);
+        jsonObject.put("days", days);
+        jsonObject.put("material", material);
+        jsonObject.put("id", id);
+
+        return jsonObject;
+    }
 }
