@@ -69,14 +69,8 @@ public class Wardrobe implements Writable {
     // EFFECTS: removes clothing with given id from the list of clothing corresponding to given type
     public void removeClothing(String type, int id) {
         ClothingCategory category = getCategory(type);
-        Clothing currClothing = null;
-        List<Clothing> sortedClothes = allClothes.get(category);
-        for (Clothing clothing: sortedClothes) {
-            if (clothing.getID() == id) {
-                currClothing = clothing;
-            }
-        }
-        sortedClothes.remove(currClothing);
+        Clothing currClothing = getMyClothing(type, id);
+        allClothes.get(category).remove(currClothing);
     }
 
     // REQUIRES: input clothing type must correspond to a category name and list of clothing must contain a clothing

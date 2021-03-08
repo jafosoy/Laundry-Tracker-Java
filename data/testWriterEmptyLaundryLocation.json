@@ -4,47 +4,7 @@
         {
             "category": {
                 "low stock": 0,
-                "name": "formalwear",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "shirts/tanks",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
                 "name": "pants",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "jacket/coat",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "shorts",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "dress/skirt",
                 "next ID": 1
             },
             "clothes": []
@@ -60,23 +20,7 @@
         {
             "category": {
                 "low stock": 0,
-                "name": "jeans",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "socks",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "sleepwear",
+                "name": "jacket/coat",
                 "next ID": 1
             },
             "clothes": []
@@ -93,6 +37,62 @@
             "category": {
                 "low stock": 0,
                 "name": "sweater",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": 0,
+                "name": "jeans",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": 0,
+                "name": "shorts",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": 0,
+                "name": "formalwear",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": 0,
+                "name": "dress/skirt",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": 0,
+                "name": "shirts/tanks",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": 0,
+                "name": "sleepwear",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": 0,
+                "name": "socks",
                 "next ID": 1
             },
             "clothes": []
