@@ -71,6 +71,7 @@ public class Wardrobe implements Writable {
         ClothingCategory category = getCategory(type);
         Clothing currClothing = getMyClothing(type, id);
         allClothes.get(category).remove(currClothing);
+
     }
 
     // REQUIRES: input clothing type must correspond to a category name and list of clothing must contain a clothing
