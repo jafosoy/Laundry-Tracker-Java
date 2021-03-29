@@ -45,17 +45,9 @@
             "category": {
                 "low stock": -1,
                 "name": "dress/skirt",
-                "next ID": 2
+                "next ID": 1
             },
-            "clothes": [{
-                "colour": "red",
-                "size": "S",
-                "material": "cotton",
-                "days": 10,
-                "id": 1,
-                "brand": "NONE",
-                "frequency": 1
-            }]
+            "clothes": []
         },
         {
             "category": {

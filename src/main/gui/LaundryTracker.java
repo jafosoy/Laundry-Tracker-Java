@@ -21,6 +21,9 @@ import java.io.IOException;
 // using basis of gui structures from:
 //       - AlarmSystem projects
 //       - From Java component tutorials: Converter, ListDemo, TextDemo, LabelChanger
+//       - Used implementation of playSound from
+//       http://suavesnippets.blogspot.com/2011/06/add-sound-on-jbutton-click-in-java.html for audio component
+//       - button sound based on recording or from https://www.soundjay.com/beep-sounds-1.html (i.e. beep-o7.wav)
 public class LaundryTracker extends JFrame {
 
     private static final String JSON_STORE_CLOSET = "./data/myCloset.json";
@@ -176,9 +179,11 @@ public class LaundryTracker extends JFrame {
 
         private class EditFrame extends AbstractAction {
 
+            JInternalFrame editor;
+
             public EditFrame() {
                 super("Edit Username");
-                JInternalFrame editor = new JInternalFrame("Edit Username", false, true, false, false);
+                editor = new JInternalFrame("Edit Username", false, true, false, false);
                 editor.setLayout(new FlowLayout());
                 JButton btn = new JButton("Change");
                 btn.setActionCommand("myButton");
@@ -198,7 +203,8 @@ public class LaundryTracker extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 if (e.getActionCommand().equals("myButton")) {
                     userName = field.getText();
-                    laundryTracker.revalidate();
+                    laundryTracker.setTitle(userName + "'s Laundry Tracker");
+                    editor.dispose();
                 }
             }
         }
