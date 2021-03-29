@@ -36,5 +36,10 @@ room) to file
 - As a user, I want to be able to load the username of the laundry tracker app 
 - As a user, I want to be able to load my locations statuses from file
 
+GUI phase:
+- As a user, I want a sound to be played whenever specific buttons have been pressed (i.e. when clothing has been 
+transferred, when clothing has been added/removed)
+- As a user, I want the app to play the laundry jingle whenever the user exits the application with a laundry joke that pops up
+
 
  

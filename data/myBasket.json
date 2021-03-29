@@ -3,15 +3,7 @@
     "wardrobe": {"clothing sets": [
         {
             "category": {
-                "low stock": 0,
-                "name": "sweater",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
+                "low stock": -1,
                 "name": "shorts",
                 "next ID": 1
             },
@@ -19,55 +11,7 @@
         },
         {
             "category": {
-                "low stock": 0,
-                "name": "dress/skirt",
-                "next ID": 1
-            },
-            "clothes": [{
-                "colour": "black",
-                "size": "s",
-                "material": "cotton",
-                "days": 10,
-                "id": 1,
-                "brand": "NONE",
-                "frequency": 6
-            }]
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "jeans",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "sleepwear",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "shirts/tanks",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
-                "name": "underwear",
-                "next ID": 1
-            },
-            "clothes": []
-        },
-        {
-            "category": {
-                "low stock": 0,
+                "low stock": -1,
                 "name": "socks",
                 "next ID": 1
             },
@@ -75,7 +19,15 @@
         },
         {
             "category": {
-                "low stock": 0,
+                "low stock": -1,
+                "name": "underwear",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": -1,
                 "name": "jacket/coat",
                 "next ID": 1
             },
@@ -83,7 +35,31 @@
         },
         {
             "category": {
-                "low stock": 0,
+                "low stock": -1,
+                "name": "jeans",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": -1,
+                "name": "sportswear",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": -1,
+                "name": "sweater",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": -1,
                 "name": "formalwear",
                 "next ID": 1
             },
@@ -91,7 +67,15 @@
         },
         {
             "category": {
-                "low stock": 0,
+                "low stock": -1,
+                "name": "sleepwear",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": -1,
                 "name": "pants",
                 "next ID": 1
             },
@@ -99,8 +83,16 @@
         },
         {
             "category": {
-                "low stock": 0,
-                "name": "sportswear",
+                "low stock": -1,
+                "name": "dress/skirt",
+                "next ID": 1
+            },
+            "clothes": []
+        },
+        {
+            "category": {
+                "low stock": -1,
+                "name": "shirts/tanks",
                 "next ID": 1
             },
             "clothes": []

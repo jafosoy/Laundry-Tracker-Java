@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Wardrobe implements Writable {
     private final Map<ClothingCategory, List<Clothing>> allClothes;
-    private final int defaultLowStock = 0;
+    private final int defaultLowStock = -1;
     private final ClothingCategory dressOrSkirt = new ClothingCategory("dress/skirt", defaultLowStock);
     private final ClothingCategory formalWear = new ClothingCategory("formalwear", defaultLowStock);
     private final ClothingCategory jacketCoat = new ClothingCategory("jacket/coat", defaultLowStock);
@@ -104,6 +104,17 @@ public class Wardrobe implements Writable {
             }
         }
         return category;
+    }
+
+    // EFFECTS: returns true if this wardrobe has no clothing stored
+    public boolean isEmpty() {
+        boolean isEmpty = true;
+        for (ClothingCategory cc : allClothes.keySet()) {
+            if (!getClothes(cc).isEmpty()) {
+                isEmpty = false;
+            }
+        }
+        return isEmpty;
     }
 
     // EFFECTS: returns a list of all the clothing category names

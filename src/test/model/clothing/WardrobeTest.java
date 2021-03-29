@@ -143,4 +143,19 @@ public class WardrobeTest {
 
         assertFalse(wardrobeTest.isLow(shirts));
     }
+
+    @Test
+    public void testWardrobeEmpty() {
+        assertTrue(wardrobeTest.isEmpty());
+    }
+
+    @Test
+    public void testWardrobeNotEmpty() {
+        ClothingCategory shirts = wardrobeTest.getCategory("shirts/tanks");
+        String type = shirts.getCategoryName();
+        Clothing testShirt = new Clothing("uniqlo", "S", "green", 3, 0, "cotton");
+        wardrobeTest.addClothing(type, testShirt, true);
+
+        assertFalse(wardrobeTest.isEmpty());
+    }
 }

@@ -119,5 +119,4 @@ public abstract class LaundryLocation implements Writable {
         return json;
     }
 
-
 }
