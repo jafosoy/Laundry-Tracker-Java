@@ -2,12 +2,16 @@ package gui.locations.genericmenubuttons;
 
 import model.locations.LaundryLocation;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 
 public class TransferSpecific extends AbstractAction implements ListSelectionListener {
 
@@ -109,6 +113,7 @@ public class TransferSpecific extends AbstractAction implements ListSelectionLis
     private class TransferListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
+            playSound("transferSound.wav");
             String transferred = String.valueOf(listModel.get(transferableList.getSelectedIndex()));
             if (label.equalsIgnoreCase("category")) {
                 currentLocation.transferClothingByType(transferred, targetLocation);
@@ -129,6 +134,20 @@ public class TransferSpecific extends AbstractAction implements ListSelectionLis
             } else {
                 JOptionPane.showMessageDialog(null,
                         "All " + transferred + " clothing transferred to " + targetLocation.getUsername() + ".");
+            }
+        }
+
+        // EFFECTS: plays sound from file specific to when it is called
+        public void playSound(String soundName) {
+            try {
+                AudioInputStream audioInputStream;
+                audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+                Clip clip = AudioSystem.getClip();
+                clip.open(audioInputStream);
+                clip.start();
+            } catch (Exception ex) {
+                System.out.println("Error with playing sound.");
+                ex.printStackTrace();
             }
         }
     }

@@ -2,9 +2,13 @@ package gui.locations.genericmenubuttons;
 
 import model.locations.LaundryLocation;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 // represents the action to be taken when the user wants to transfer all clothing from the current location
 public class TransferAll extends AbstractAction {
@@ -30,6 +34,7 @@ public class TransferAll extends AbstractAction {
                 null,
                 options, options[0]);
         if (n == JOptionPane.YES_OPTION) {
+            playSound("transferSound.wav");
             currentLocation.transferAllClothes(targetLocation);
             // TODO: need to add transfer sound
             JOptionPane.showMessageDialog(null,
@@ -37,6 +42,19 @@ public class TransferAll extends AbstractAction {
 
         } else {
             JOptionPane.showMessageDialog(null, "No clothes transferred.");
+        }
+    }
+
+    // EFFECTS: plays sound from file specific to when it is called
+    public void playSound(String soundName) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
         }
     }
 }

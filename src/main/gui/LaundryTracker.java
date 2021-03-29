@@ -15,8 +15,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.AudioSystem;
 
 // using basis of gui structures from:
 //       - AlarmSystem projects
@@ -47,11 +52,15 @@ public class LaundryTracker extends JFrame {
     private JInternalFrame mainMenu;
 
     public LaundryTracker(String userName) {
-        // TODO: need to add audio for startup
+
         this.userName = userName;
         initializeFields();
         initializeGraphics();
+        playSound("turnOn.wav");
 
+        JOptionPane.showMessageDialog(null,
+                "What did the first sock say to the second sock in the dryer?"
+                        + "\nI'll see you the next time around!");
 
         jsonReaderCloset = new JsonReader(JSON_STORE_CLOSET);
         jsonReaderBasket = new JsonReader(JSON_STORE_BASKET);
@@ -128,7 +137,7 @@ public class LaundryTracker extends JFrame {
     // EFFECTS:
     private void addMenuButtonPanel() {
         JPanel menuButtons = new JPanel();
-        menuButtons.setLayout(new GridLayout(6,1));
+        menuButtons.setLayout(new GridLayout(6, 1));
         menuButtons.add(new JButton(new ClosetMenu(this)));
         menuButtons.add(new JButton(new BasketMenu(this)));
         menuButtons.add(new JButton(new LaundryMenu(this)));
@@ -151,6 +160,19 @@ public class LaundryTracker extends JFrame {
             return this.myBasket;
         } else {
             return this.myLaundry;
+        }
+    }
+
+    // EFFECTS: plays sound from file specific to when it is called
+    public void playSound(String soundName) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
         }
     }
 
