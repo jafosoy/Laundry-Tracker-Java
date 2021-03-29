@@ -26,6 +26,7 @@ public class ClothingDisplayMenu extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         displayMenuFrame = new JInternalFrame("Display Clothes", false, true, false, false);
         displayMenuFrame.setLayout(new BorderLayout());
         addDisplayButtonPanel();

@@ -1,5 +1,6 @@
 package gui.locations.closetspecificmenubuttons;
 
+import gui.GenerateButtonSound;
 import model.clothes.Clothing;
 import model.clothes.ClothingCategory;
 import model.locations.LaundryLocation;
@@ -30,6 +31,7 @@ public class RemoveClothingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         new UpdatableJFrame(desktopPane, userCloset);
     }
 
@@ -197,7 +199,7 @@ public class RemoveClothingAction extends AbstractAction {
                     listModel.remove(index);
                     removableList.setSelectedIndex(index);
                     userCloset.getMyWardrobe().removeClothing(category, id);
-                    playSound("trash.wav");
+                    new GenerateButtonSound("trash.wav");
                     JOptionPane.showMessageDialog(null,
                             category + " has been removed from " + userCloset.getUsername());
 
@@ -209,21 +211,6 @@ public class RemoveClothingAction extends AbstractAction {
                 }
 
 
-            }
-
-
-            // EFFECTS: plays sound from file specific to when it is called
-            public void playSound(String soundName) {
-                try {
-                    AudioInputStream audioInputStream;
-                    audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-                    Clip clip = AudioSystem.getClip();
-                    clip.open(audioInputStream);
-                    clip.start();
-                } catch (Exception ex) {
-                    System.out.println("Error with playing sound.");
-                    ex.printStackTrace();
-                }
             }
         }
     }

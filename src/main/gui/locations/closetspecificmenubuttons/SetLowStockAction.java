@@ -1,5 +1,6 @@
 package gui.locations.closetspecificmenubuttons;
 
+import gui.GenerateButtonSound;
 import model.clothes.Clothing;
 import model.clothes.ClothingCategory;
 import model.locations.LaundryLocation;
@@ -26,6 +27,7 @@ public class SetLowStockAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         new ChooseCategoryFrame(desktopPane, userCloset);
     }
 

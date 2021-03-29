@@ -1,5 +1,6 @@
 package gui.locations.closetspecificmenubuttons;
 
+import gui.GenerateButtonSound;
 import model.clothes.Clothing;
 import model.locations.LaundryLocation;
 
@@ -29,6 +30,7 @@ public class AddClothingAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         addFrame = new JInternalFrame("Add Clothing", false, true, false, false);
 
         initializePanels();

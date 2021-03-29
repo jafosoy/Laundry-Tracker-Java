@@ -1,5 +1,6 @@
 package gui.locations;
 
+import gui.GenerateButtonSound;
 import gui.LaundryTracker;
 import gui.locations.closetspecificmenubuttons.AddDaysAction;
 import gui.locations.closetspecificmenubuttons.AlertsAction;
@@ -32,6 +33,7 @@ public class ClosetMenu extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         this.mainDesktop = laundryTracker.getDesktop();
         this.myCloset = laundryTracker.getLocation("closet");
         this.myBasket = laundryTracker.getLocation("basket");

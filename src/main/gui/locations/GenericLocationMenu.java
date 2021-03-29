@@ -1,5 +1,6 @@
 package gui.locations;
 
+import gui.GenerateButtonSound;
 import gui.LaundryTracker;
 import gui.exceptions.NoClothingException;
 import gui.locations.genericmenubuttons.TransferAll;
@@ -37,6 +38,7 @@ public abstract class GenericLocationMenu extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e)  {
+        new GenerateButtonSound("beep-07.wav");
         this.mainLocation = laundryTracker.getLocation(currentLocation);
         this.transferLocation = laundryTracker.getLocation(targetLocation);
         try {

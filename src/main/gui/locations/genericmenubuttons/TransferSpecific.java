@@ -1,5 +1,6 @@
 package gui.locations.genericmenubuttons;
 
+import gui.GenerateButtonSound;
 import model.locations.LaundryLocation;
 
 import javax.sound.sampled.AudioInputStream;
@@ -38,6 +39,7 @@ public class TransferSpecific extends AbstractAction implements ListSelectionLis
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         transferFrame = new JInternalFrame("Transfer by " + label, false, true, false, false);
         transferPanel = new JPanel(new BorderLayout());
 
@@ -113,7 +115,7 @@ public class TransferSpecific extends AbstractAction implements ListSelectionLis
     private class TransferListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-            playSound("transferSound.wav");
+            new GenerateButtonSound("transferSound.wav");
             String transferred = String.valueOf(listModel.get(transferableList.getSelectedIndex()));
             if (label.equalsIgnoreCase("category")) {
                 currentLocation.transferClothingByType(transferred, targetLocation);
@@ -134,20 +136,6 @@ public class TransferSpecific extends AbstractAction implements ListSelectionLis
             } else {
                 JOptionPane.showMessageDialog(null,
                         "All " + transferred + " clothing transferred to " + targetLocation.getUsername() + ".");
-            }
-        }
-
-        // EFFECTS: plays sound from file specific to when it is called
-        public void playSound(String soundName) {
-            try {
-                AudioInputStream audioInputStream;
-                audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-                Clip clip = AudioSystem.getClip();
-                clip.open(audioInputStream);
-                clip.start();
-            } catch (Exception ex) {
-                System.out.println("Error with playing sound.");
-                ex.printStackTrace();
             }
         }
     }

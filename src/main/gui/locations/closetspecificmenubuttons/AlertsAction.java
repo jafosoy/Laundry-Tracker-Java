@@ -1,5 +1,6 @@
 package gui.locations.closetspecificmenubuttons;
 
+import gui.GenerateButtonSound;
 import model.clothes.Clothing;
 import model.clothes.ClothingCategory;
 import model.clothes.Wardrobe;
@@ -24,6 +25,7 @@ public class AlertsAction extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         Wardrobe closetWardrobe = closet.getMyWardrobe();
         for (String cc : closetWardrobe.getCategoryNames()) {
             ClothingCategory currCategory = closetWardrobe.getCategory(cc);

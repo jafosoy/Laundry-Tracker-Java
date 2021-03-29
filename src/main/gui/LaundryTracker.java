@@ -15,13 +15,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.AudioSystem;
 
 // using basis of gui structures from:
 //       - AlarmSystem projects
@@ -56,7 +51,7 @@ public class LaundryTracker extends JFrame {
         this.userName = userName;
         initializeFields();
         initializeGraphics();
-        playSound("turnOn.wav");
+        new GenerateButtonSound("turnOn.wav");
 
         JOptionPane.showMessageDialog(null,
                 "What did the first sock say to the second sock in the dryer?"
@@ -163,19 +158,6 @@ public class LaundryTracker extends JFrame {
         }
     }
 
-    // EFFECTS: plays sound from file specific to when it is called
-    public void playSound(String soundName) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
-        }
-    }
-
 
     // processes changing username based on user input
     private class EditUsername extends AbstractAction {
@@ -277,6 +259,7 @@ public class LaundryTracker extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            new GenerateButtonSound("beep-07.wav");
             Object[] options = {"Yes", "No"};
             int n = JOptionPane.showOptionDialog(null,
                     "You are about to load a previous version of your laundry tracker."
@@ -357,6 +340,7 @@ public class LaundryTracker extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            new GenerateButtonSound("beep-07.wav");
             Object[] options = {"Yes", "No"};
             int n = JOptionPane.showOptionDialog(null,
                     "You are about to save a new version of your laundry tracker."

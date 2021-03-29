@@ -1,5 +1,6 @@
 package gui.locations.genericmenubuttons;
 
+import gui.GenerateButtonSound;
 import model.locations.LaundryLocation;
 
 import javax.sound.sampled.AudioInputStream;
@@ -25,6 +26,7 @@ public class TransferAll extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        new GenerateButtonSound("beep-07.wav");
         Object[] options = {"Yes", "No"};
         int n = JOptionPane.showOptionDialog(null,
                 "You are about to transfer all clothes. Proceed?",
@@ -34,27 +36,13 @@ public class TransferAll extends AbstractAction {
                 null,
                 options, options[0]);
         if (n == JOptionPane.YES_OPTION) {
-            playSound("transferSound.wav");
+            new GenerateButtonSound("transferSound.wav");
             currentLocation.transferAllClothes(targetLocation);
-            // TODO: need to add transfer sound
             JOptionPane.showMessageDialog(null,
                     "All clothes transferred to " + targetLocation.getUsername() + ".");
 
         } else {
             JOptionPane.showMessageDialog(null, "No clothes transferred.");
-        }
-    }
-
-    // EFFECTS: plays sound from file specific to when it is called
-    public void playSound(String soundName) {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (Exception ex) {
-            System.out.println("Error with playing sound.");
-            ex.printStackTrace();
         }
     }
 }

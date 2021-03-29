@@ -1,5 +1,6 @@
 package gui.locations.closetspecificmenubuttons;
 
+import gui.GenerateButtonSound;
 import model.clothes.Clothing;
 import model.clothes.ClothingCategory;
 import model.locations.LaundryLocation;
@@ -62,6 +63,7 @@ public class AddDaysAction extends AbstractAction {
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            new GenerateButtonSound("beep-07.wav");
             JComboBox cb = (JComboBox) e.getSource();
             categoryChosen = (String) cb.getSelectedItem();
             clothingFrame = new ClothingJFrame(currentDesktop, categoryChosen);
