@@ -24,6 +24,7 @@ import java.io.IOException;
 //       - Used implementation of playSound from
 //       http://suavesnippets.blogspot.com/2011/06/add-sound-on-jbutton-click-in-java.html for audio component
 //       - button sound based on recording or from https://www.soundjay.com/beep-sounds-1.html (i.e. beep-o7.wav)
+
 public class LaundryTracker extends JFrame {
 
     private static final String JSON_STORE_CLOSET = "./data/myCloset.json";
