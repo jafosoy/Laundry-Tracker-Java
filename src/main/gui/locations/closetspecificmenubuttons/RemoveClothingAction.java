@@ -202,7 +202,6 @@ public class RemoveClothingAction extends AbstractAction {
                     new GenerateButtonSound("trash.wav");
                     JOptionPane.showMessageDialog(null,
                             category + " has been removed from " + userCloset.getUsername());
-
                 } catch (RuntimeException rne) {
                     JOptionPane.showMessageDialog(desktopPane,
                             "No clothing chosen!",

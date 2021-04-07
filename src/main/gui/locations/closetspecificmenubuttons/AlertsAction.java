@@ -13,7 +13,6 @@ import java.util.List;
 
 public class AlertsAction extends AbstractAction {
 
-    private DefaultListModel listModel;
     private final JDesktopPane desktopPane;
     private final LaundryLocation closet;
 
